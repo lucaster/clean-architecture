@@ -71,7 +71,7 @@ package "My 'CQRS + Clean Architecture' App" {
   UseCaseFactory -[dotted]-> CqrsToCleanArchResponseMapper : provides
   UseCaseFactory --[dotted]--> UseCase : provides
 
-  package "Command Executed Event" {
+  package "Example: Command Executed Event" {
     class CommandExecutedEvent<<Event, CqrsRequest>> {
       getPayload(): CommandExecutedEventPayload
     }
