@@ -28,7 +28,6 @@ package CQRS {
     CqrsRequest::type examples: commandName,queryName,eventName,topic,channel
   endlegend
 }
-
 package "Clean Architecture" as CLEANARCH {
   abstract class UseCaseRequest<P> {
     {abstract} getPayload(): P
@@ -89,3 +88,4 @@ package "My 'CQRS + Clean Architecture' App" {
     class OnCommandExecutedResponseMapper<<CqrsToCleanArchResponseMapper>>
   }
 }
+@enduml
