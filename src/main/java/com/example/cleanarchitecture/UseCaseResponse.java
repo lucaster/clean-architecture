@@ -5,11 +5,11 @@ import java.util.Objects;
 /**
  * @param P can be {@link java.lang.Void}
  */
-public abstract class Response<P> {
+public abstract class UseCaseResponse<P> {
 
     private final P payload;
 
-    protected Response(P payload) {
+    protected UseCaseResponse(P payload) {
         Objects.requireNonNull(payload);
         this.payload = payload;
     }

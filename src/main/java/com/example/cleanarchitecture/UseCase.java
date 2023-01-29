@@ -3,8 +3,8 @@ package com.example.cleanarchitecture;
 import com.example.monads.Try;
 
 public interface UseCase<
-    I extends Request<A>,
-    O extends Response<B>,
+    I extends UseCaseRequest<A>,
+    O extends UseCaseResponse<B>,
     A,
     B
 > {

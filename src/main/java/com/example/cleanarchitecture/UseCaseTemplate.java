@@ -4,7 +4,7 @@ import com.example.cleanarchitecture.exceptions.BusinessValidationException;
 import com.example.cleanarchitecture.exceptions.RequestValidationException;
 import com.example.monads.Try;
 
-public abstract class UseCaseTemplate<I extends Request<A>, O extends Response<B>, A, B>
+public abstract class UseCaseTemplate<I extends UseCaseRequest<A>, O extends UseCaseResponse<B>, A, B>
         implements UseCase<I, O, A, B> {
 
     @Override
