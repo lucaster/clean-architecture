@@ -2,11 +2,17 @@
 hide empty members
 
 package CQRS {
-  class Command
-  class Query
-  class Event
+  class Command<P>
+  class Query<P>
+  class Event<P>
+  class Outcome<P>
+  class Result<P>
   Command <-- Outcome
   Query <-- Result
+
+  legend
+  P can be Void
+  endlegend
 }
 
 package "Clean Architecture" {
