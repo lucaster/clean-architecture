@@ -16,7 +16,8 @@ package "Clean Architecture" {
   abstract class Response<P> {
     {abstract} getPayload(): P
   }
-  note right of Response : P can be Void
+  note top of Request : P can be Void
+  note top of Response : P can be Void
   interface UseCase<I: Request<PI>, O: Response<PO>> {
     {abstract} +handle(I): Try<O>
   }
