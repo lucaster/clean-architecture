@@ -2,7 +2,7 @@
 hide empty members
 
 package CQRS {
-  package dtos {
+  package DTOs {
     abstract class CqrsRequest<P> {
       type: string
       {abstract} +getPayload(): P
