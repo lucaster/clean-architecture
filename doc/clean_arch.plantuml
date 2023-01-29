@@ -1,0 +1,39 @@
+@startuml clean_arch
+hide empty members
+
+package CQRS {
+  class Command
+  class Query
+  class Event
+  Command <-- Outcome
+  Query <-- Result
+}
+
+package "Clean Architecture" {
+  abstract class Request<P> {
+    {abstract} getPayload(): P
+  }
+  abstract class Response<P> {
+    {abstract} getPayload(): P
+  }
+  note right of Response : P can be Void
+  interface UseCase<I: Request<PI>, O: Response<PO>> {
+    {abstract} +handle(I): Try<O>
+  }
+  abstract class UseCaseTemplate<I, O> {
+    handle(I): O
+    {abstract} #validateRequest(I)
+    {abstract} #validateBusiness(I)
+    {abstract} #work(I): Try<O>
+  }
+  ' note bottom of UseCaseTemplate : handle() uses Try pattern
+  UseCase <|-- UseCaseTemplate
+
+  Request .[dotted]right.> UseCase
+  UseCase .[dotted]right.> Response
+}
+package Monads {
+  abstract class Try<T>
+}
+
+@enduml
