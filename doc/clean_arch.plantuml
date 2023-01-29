@@ -18,7 +18,7 @@ package "Clean Architecture" {
   }
   note top of Request : P can be Void
   note top of Response : P can be Void
-  interface UseCase<I: Request<PI>, O: Response<PO>> {
+  interface UseCase<I: Request<A>, O: Response<B>> {
     {abstract} +handle(I): Try<O>
   }
   abstract class UseCaseTemplate<I, O> {
