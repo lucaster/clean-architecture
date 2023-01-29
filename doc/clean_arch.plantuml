@@ -69,15 +69,16 @@ package CQRS {
     EventHandler <|-- EventHandlerAsync
   }
   interface Broker {
-    {abstract} +sendCommandAsync(queue, Command): Void
     {abstract} +sendCommand(queue, Command): Outcome
-    {abstract} +listenToCommand(queue, CommandHandler, group): Void
-    ---
-    {abstract} +sendQueryAsync(queue, Query): Void
     {abstract} +sendQuery(queue, Query): Result
-    {abstract} +listenToQuery(queue, QueryHandler, group): Void
+    {abstract} +sendEvent(topic, Event): Void
     ---
-    {abstract} +sendEventAsync(topic, Event)
+    {abstract} +sendCommandAsync(queue, Command): Void
+    {abstract} +sendQueryAsync(queue, Query): Void
+    {abstract} +sendEventAsync(topic, Event): Void
+    ---
+    {abstract} +listenToCommand(queue, CommandHandler, group): Void
+    {abstract} +listenToQuery(queue, QueryHandler, group): Void
     {abstract} +listenToEvent(topic, EventHandler): Void
   }
   legend
