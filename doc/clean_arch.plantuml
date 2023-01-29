@@ -56,7 +56,7 @@ package "Clean Architecture" as CLEANARCH {
 package Monads {
   abstract class Try<T>
 }
-package "My CQRS App" {
+package "My 'CQRS + Clean Architecture' App" {
   interface UseCaseFactory {
     {abstract} getRequestMapper<M : CqrsRequest>()
     {abstract} getResponseMaper<M : CqrsResponse>()
@@ -71,20 +71,21 @@ package "My CQRS App" {
   UseCaseFactory -[dotted]-> CleanArchToCqrsRequestMapper : provides
   UseCaseFactory -[dotted]-> CqrsToCleanArchResponseMapper : provides
   UseCaseFactory --[dotted]--> UseCase : provides
-}
-package "Command Executed Event" {
-  class CommandExecutedEvent<<Event, CqrsRequest>> {
-    getPayload(): CommandExecutedEventPayload
+
+  package "Command Executed Event" {
+    class CommandExecutedEvent<<Event, CqrsRequest>> {
+      getPayload(): CommandExecutedEventPayload
+    }
+    class CommandExecutedEventPayload {
+      command: Command
+      outcome: Outcome
+    }
+    class OnCommandExecutedRequest<<UseCaseRequest>>
+    class OnCommandExecutedResponse<<UseCaseResponse>> {
+      getPayload(): Void
+    }
+    class OnCommandExecutedUseCase<<UseCase>>
+    class OnCommandExecutedRequestMapper<<CleanArchToCqrsRequestMapper>>
+    class OnCommandExecutedResponseMapper<<CqrsToCleanArchResponseMapper>>
   }
-  class CommandExecutedEventPayload {
-    command: Command
-    outcome: Outcome
-  }
-  class OnCommandExecutedRequest<<UseCaseRequest>>
-  class OnCommandExecutedResponse<<UseCaseResponse>> {
-    getPayload(): Void
-  }
-  class OnCommandExecutedUseCase<<UseCase>>
-  class OnCommandExecutedRequestMapper<<CleanArchToCqrsRequestMapper>>
-  class OnCommandExecutedResponseMapper<<CqrsToCleanArchResponseMapper>>
 }
