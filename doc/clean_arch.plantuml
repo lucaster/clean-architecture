@@ -2,27 +2,79 @@
 hide empty members
 
 package CQRS {
-  abstract class CqrsRequest<P> {
-    type: string
-    {abstract} +getPayload(): P
+  package dtos {
+    abstract class CqrsRequest<P> {
+      type: string
+      {abstract} +getPayload(): P
+    }
+    abstract class CqrsResponse<P> {
+      type: string
+      {abstract} +getPayload(): P
+    }
+    class Command<P>
+    class Query<P>
+    class Event<P>
+    class Outcome<P>
+    class Result<P>
+    Command <-- Outcome
+    Query <-- Result
+    CqrsRequest <|-- Command
+    CqrsRequest <|-- Query
+    CqrsRequest <|-- Event
+    CqrsResponse <|-- Outcome
+    CqrsResponse <|-- Result
   }
-  abstract class CqrsResponse<P> {
-    type: string
-    {abstract} +getPayload(): P
+  package handlers {
+    interface Handler<I, O> {
+      {abstract} +handle(I): O
+    }
+    interface HandlerAsync<I> {
+      {abstract} +handle(I): Void
+    }
+    interface QueryHandler<O> {
+      {abstract} +handle(Query): O
+    }
+    interface QueryHandlerSync {
+      {abstract} +handle(Query): Result
+    }
+    interface QueryHandlerAsync {
+      {abstract} +handle(Query): Void
+    }
+    interface CommandHandler<O> {
+      {abstract} +handle(Command): O
+    }
+    interface CommandHandlerSync {
+      {abstract} +handle(Command): Outcome
+    }
+    interface CommandHandlerAsync {
+      {abstract} +handle(Command): Void
+    }
+    interface EventHandlerAsync {
+      {abstract} +handle(Event): Void
+    }
+    Handler <|-- HandlerAsync
+    Handler <|-- CommandHandler
+    Handler <|-- QueryHandler
+    HandlerAsync <|-- CommandHandlerAsync
+    HandlerAsync <|-- QueryHandlerAsync
+    HandlerAsync <|-- EventHandlerAsync
+    CommandHandler <|-- CommandHandlerAsync
+    CommandHandler <|-- CommandHandlerSync
+    QueryHandler <|-- QueryHandlerAsync
+    QueryHandler <|-- QueryHandlerSync
   }
-  class Command<P>
-  class Query<P>
-  class Event<P>
-  class Outcome<P>
-  class Result<P>
-  Command <-- Outcome
-  Query <-- Result
-  CqrsRequest <|-- Command
-  CqrsRequest <|-- Query
-  CqrsRequest <|-- Event
-  CqrsResponse <|-- Outcome
-  CqrsResponse <|-- Result
-
+  interface Broker {
+    {abstract} +sendCommandAsync(queue, Command): Void
+    {abstract} +sendCommand(queue, Command): Outcome
+    {abstract} +listenToCommand(queue, CommandHandler, group): Void
+    ---
+    {abstract} +sendQueryAsync(queue, Query): Void
+    {abstract} +sendQuery(queue, Query): Result
+    {abstract} +listenToQuery(queue, QueryHandler, group): Void
+    ---
+    {abstract} +sendEventAsync(topic, Event)
+    {abstract} +listenToEvent(topic, EventHandler): Void
+  }
   legend
     P can be Void
     CqrsRequest::type examples: commandName,queryName,eventName,topic,channel
@@ -48,7 +100,6 @@ package "Clean Architecture" as CLEANARCH {
   }
   ' note bottom of UseCaseTemplate : handle() uses Try pattern
   UseCase <|-- UseCaseTemplate
-
   UseCaseRequest .[dotted]right.> UseCase
   UseCase .[dotted]right.> UseCaseResponse
 }
