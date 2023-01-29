@@ -37,7 +37,7 @@ package "Clean Architecture" as CLEANARCH {
   }
   note bottom of UseCaseRequest : P can be Void
   note bottom of UseCaseResponse : P can be Void
-  interface UseCase<I: UseCaseRequest<A>, O: UseCaseResponse<B>> {
+  interface UseCase<I: UseCaseRequest, O: UseCaseResponse> {
     {abstract} +handle(I): Try<O>
   }
   abstract class UseCaseTemplate<I, O> {
