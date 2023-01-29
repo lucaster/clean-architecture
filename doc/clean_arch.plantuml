@@ -49,12 +49,16 @@ package CQRS {
     interface CommandHandlerAsync {
       {abstract} +handle(Command): Void
     }
+    interface EventHandler<O> {
+      {abstract} +handle(Event): O
+    }
     interface EventHandlerAsync {
       {abstract} +handle(Event): Void
     }
     Handler <|-- HandlerAsync
     Handler <|-- CommandHandler
     Handler <|-- QueryHandler
+    Handler <|-- EventHandler
     HandlerAsync <|-- CommandHandlerAsync
     HandlerAsync <|-- QueryHandlerAsync
     HandlerAsync <|-- EventHandlerAsync
@@ -62,6 +66,7 @@ package CQRS {
     CommandHandler <|-- CommandHandlerSync
     QueryHandler <|-- QueryHandlerAsync
     QueryHandler <|-- QueryHandlerSync
+    EventHandler <|-- EventHandlerAsync
   }
   interface Broker {
     {abstract} +sendCommandAsync(queue, Command): Void
