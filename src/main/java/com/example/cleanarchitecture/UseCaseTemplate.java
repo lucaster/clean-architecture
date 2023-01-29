@@ -11,7 +11,7 @@ public abstract class UseCaseTemplate<
     implements UseCase<I, O> {
 
     @Override
-    public Try<O> handle(I request) {
+    public final Try<O> handle(I request) {
         return Try
                 .ofFailable(() -> {
                     validateRequest(request);
@@ -21,11 +21,7 @@ public abstract class UseCaseTemplate<
                     validateBusiness(request);
                     return null;
                 })
-                .map(x -> extracted(request));
-    }
-
-    private O extracted(I request) {
-        return work(request);
+                .map(x -> work(request));
     }
 
     protected abstract void validateRequest(I request) throws RequestValidationException;
