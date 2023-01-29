@@ -2,6 +2,14 @@
 hide empty members
 
 package CQRS {
+  abstract class CqrsRequest<P> {
+    type: string
+    {abstract} getPayload(): P
+  }
+  abstract class CqrsResponse<P> {
+    type: string
+    {abstract} getPayload(): P
+  }
   class Command<P>
   class Query<P>
   class Event<P>
@@ -9,22 +17,28 @@ package CQRS {
   class Result<P>
   Command <-- Outcome
   Query <-- Result
+  CqrsRequest <|-- Command
+  CqrsRequest <|-- Query
+  CqrsRequest <|-- Event
+  CqrsResponse <|-- Outcome
+  CqrsResponse <|-- Result
 
   legend
-  P can be Void
+    P can be Void
+    CqrsRequest::type examples: commandName,queryName,eventName,topic,channel
   endlegend
 }
 
-package "Clean Architecture" {
-  abstract class Request<P> {
+package "Clean Architecture" as CLEANARCH {
+  abstract class UseCaseRequest<P> {
     {abstract} getPayload(): P
   }
-  abstract class Response<P> {
+  abstract class UseCaseResponse<P> {
     {abstract} getPayload(): P
   }
-  note bottom of Request : P can be Void
-  note bottom of Response : P can be Void
-  interface UseCase<I: Request<A>, O: Response<B>> {
+  note bottom of UseCaseRequest : P can be Void
+  note bottom of UseCaseResponse : P can be Void
+  interface UseCase<I: UseCaseRequest<A>, O: UseCaseResponse<B>> {
     {abstract} +handle(I): Try<O>
   }
   abstract class UseCaseTemplate<I, O> {
@@ -36,11 +50,41 @@ package "Clean Architecture" {
   ' note bottom of UseCaseTemplate : handle() uses Try pattern
   UseCase <|-- UseCaseTemplate
 
-  Request .[dotted]right.> UseCase
-  UseCase .[dotted]right.> Response
+  UseCaseRequest .[dotted]right.> UseCase
+  UseCase .[dotted]right.> UseCaseResponse
 }
 package Monads {
   abstract class Try<T>
 }
-
-@enduml
+package "My CQRS App" {
+  interface UseCaseFactory {
+    {abstract} getRequestMapper<M : CqrsRequest>()
+    {abstract} getResponseMaper<M : CqrsResponse>()
+    {abstract} getUseCase<M : CqrsRequest>()
+    ---
+    {abstract} getRequestMapper(String type)
+    {abstract} getResponseMaper(String type)
+    {abstract} getUseCase(String type)
+  }
+  interface CleanArchToCqrsRequestMapper<M : CqrsRequest, R : UseCaseRequest>
+  interface CqrsToCleanArchResponseMapper<R : UseCaseResponse, M : CqrsResponse>
+  UseCaseFactory -[dotted]-> CleanArchToCqrsRequestMapper : provides
+  UseCaseFactory -[dotted]-> CqrsToCleanArchResponseMapper : provides
+  UseCaseFactory --[dotted]--> UseCase : provides
+}
+package "Command Executed Event" {
+  class CommandExecutedEvent<<Event, CqrsRequest>> {
+    getPayload(): CommandExecutedEventPayload
+  }
+  class CommandExecutedEventPayload {
+    command: Command
+    outcome: Outcome
+  }
+  class OnCommandExecutedRequest<<UseCaseRequest>>
+  class OnCommandExecutedResponse<<UseCaseResponse>> {
+    getPayload(): Void
+  }
+  class OnCommandExecutedUseCase<<UseCase>>
+  class OnCommandExecutedRequestMapper<<CleanArchToCqrsRequestMapper>>
+  class OnCommandExecutedResponseMapper<<CqrsToCleanArchResponseMapper>>
+}
