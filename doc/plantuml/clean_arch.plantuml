@@ -24,6 +24,7 @@ package "Clean Architecture" as CLEANARCH {
   UseCase .[dotted]right.> UseCaseResponse
 }
 @enduml
+
 @startuml CQRS
 hide empty members
 package CQRS {
@@ -112,6 +113,7 @@ package CQRS {
   endlegend
 }
 @enduml
+
 @startuml cqrs_clean_arch
 hide empty members
 package "My 'CQRS + Clean Architecture' App" {
