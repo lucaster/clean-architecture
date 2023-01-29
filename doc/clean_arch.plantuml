@@ -4,11 +4,11 @@ hide empty members
 package CQRS {
   abstract class CqrsRequest<P> {
     type: string
-    {abstract} getPayload(): P
+    {abstract} +getPayload(): P
   }
   abstract class CqrsResponse<P> {
     type: string
-    {abstract} getPayload(): P
+    {abstract} +getPayload(): P
   }
   class Command<P>
   class Query<P>
@@ -30,10 +30,10 @@ package CQRS {
 }
 package "Clean Architecture" as CLEANARCH {
   abstract class UseCaseRequest<P> {
-    {abstract} getPayload(): P
+    {abstract} +getPayload(): P
   }
   abstract class UseCaseResponse<P> {
-    {abstract} getPayload(): P
+    {abstract} +getPayload(): P
   }
   note bottom of UseCaseRequest : P can be Void
   note bottom of UseCaseResponse : P can be Void
@@ -41,7 +41,7 @@ package "Clean Architecture" as CLEANARCH {
     {abstract} +handle(I): Try<O>
   }
   abstract class UseCaseTemplate<I, O> {
-    handle(I): O
+    +handle(I): O
     {abstract} #validateRequest(I)
     {abstract} #validateBusiness(I)
     {abstract} #work(I): Try<O>
@@ -57,13 +57,13 @@ package Monads {
 }
 package "My 'CQRS + Clean Architecture' App" {
   interface UseCaseFactory {
-    {abstract} getRequestMapper<M : CqrsRequest>()
-    {abstract} getResponseMaper<M : CqrsResponse>()
-    {abstract} getUseCase<M : CqrsRequest>()
+    {abstract} +getRequestMapper<M : CqrsRequest>()
+    {abstract} +getResponseMaper<M : CqrsResponse>()
+    {abstract} +getUseCase<M : CqrsRequest>()
     ---
-    {abstract} getRequestMapper(String type)
-    {abstract} getResponseMaper(String type)
-    {abstract} getUseCase(String type)
+    {abstract} +getRequestMapper(String type)
+    {abstract} +getResponseMaper(String type)
+    {abstract} +getUseCase(String type)
   }
   interface CleanArchToCqrsRequestMapper<M : CqrsRequest, R : UseCaseRequest>
   interface CqrsToCleanArchResponseMapper<R : UseCaseResponse, M : CqrsResponse>
@@ -73,7 +73,7 @@ package "My 'CQRS + Clean Architecture' App" {
 
   package "Example: Command Executed Event" {
     class CommandExecutedEvent<<Event, CqrsRequest>> {
-      getPayload(): CommandExecutedEventPayload
+      +getPayload(): CommandExecutedEventPayload
     }
     class CommandExecutedEventPayload {
       command: Command
@@ -81,7 +81,7 @@ package "My 'CQRS + Clean Architecture' App" {
     }
     class OnCommandExecutedRequest<<UseCaseRequest>>
     class OnCommandExecutedResponse<<UseCaseResponse>> {
-      getPayload(): Void
+      +getPayload(): Void
     }
     class OnCommandExecutedUseCase<<UseCase>>
     class OnCommandExecutedRequestMapper<<CleanArchToCqrsRequestMapper>>
