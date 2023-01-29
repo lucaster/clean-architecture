@@ -79,7 +79,7 @@ package CQRS {
     ---
     {abstract} +listenToCommand(queue, CommandHandler, group): Void
     {abstract} +listenToQuery(queue, QueryHandler, group): Void
-    {abstract} +listenToEvent(topic, EventHandler): Void
+    {abstract} +listenToEvent(topic, EventHandler, group): Void
   }
   legend
     P can be Void
