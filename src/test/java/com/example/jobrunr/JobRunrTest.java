@@ -11,7 +11,7 @@ import org.junit.Test;
 public class JobRunrTest {
 
     @Test
-    public void sucks() throws Exception {
+    public void doesNotWork() throws Exception {
 
         JobRunr.configure()
         // .useJobActivator(applicationContext::getBean)
